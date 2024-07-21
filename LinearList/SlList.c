@@ -23,7 +23,7 @@ LNode * LocateElem(LinkList L, elem e)
 {
     LNode *p = L->next;
     while(p != NULL && p->data.name != e.name)
-        p->next;
+        p = p->next;
     return p;
 }
 
@@ -124,7 +124,10 @@ Status DeleteNode(LNode *p)
         return ERROR;
     LNode *q = p->next;
     if (q == NULL)
-        p == NULL;
+    {
+        p = NULL;
+        return OK;
+    }
     p->data = q->data;
     p->next = q->next;
     free(q);
