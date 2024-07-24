@@ -173,9 +173,9 @@ void PrintNode(DNode p)
 // 尾插法
 DLinkList TailInsert(DLinkList *L,int n)
 {
+    DNode *r = *L;
     for (int i = 0; i < n; i++)
     {
-        DNode *r = *L;
         elem e;
         scanf("%s %d %d %d %d\n",e.name,&(e.Math),&(e.English),&(e.Politics),&(e.Computer));
         DNode *p = (DNode*)malloc(sizeof(DNode));
@@ -183,8 +183,6 @@ DLinkList TailInsert(DLinkList *L,int n)
             return NULL;
         p->data = e;
         p->next = r->next;
-        if (r->next != NULL)
-            r->next->prior = p;
         r->next = p;
         p->prior = r;
         r = p; 
@@ -204,6 +202,7 @@ DLinkList HeadInsert(DLinkList *L,int n)
             return NULL;
         p->data = e;
         p->next = (*L)->next;
+        (*L)->next = p;
         p->prior = (*L);
         if ((*L)->next != NULL)
             (*L)->next->prior = p;
