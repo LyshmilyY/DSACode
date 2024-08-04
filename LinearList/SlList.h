@@ -1,10 +1,11 @@
 #include "../common.h"
 // 定义链表节点
-typedef struct LNode
-{
+typedef struct{
     elem data;
     struct LNode *next;
-}LNode,*LinkList;
+}LNode;
+
+typedef LNode* LinkList;
 
 // 函数声明 
 

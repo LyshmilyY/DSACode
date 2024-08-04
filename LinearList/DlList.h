@@ -1,11 +1,12 @@
 #include "../common.h"
 // 定义链表节点
-typedef struct DNode
-{
+typedef struct{
     elem data;
     struct DNode *prior;
     struct DNode *next;
-}DNode,*DLinkList;
+}DNode;
+
+typedef DNode* DLinkList;
 
 // 函数声明 
 

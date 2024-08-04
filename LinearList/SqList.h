@@ -1,8 +1,7 @@
 #include "../common.h"
 #define INITSIZE 10
 // 定义顺序表
-typedef struct SqList
-{
+typedef struct{
     int length;
     int MaxSize;
     elem* data;

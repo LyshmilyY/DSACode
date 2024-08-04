@@ -64,7 +64,7 @@ void PrintSqStack(SqStack S)
     printf("\n");
 }
 
-// 2. 链栈实现
+// 2. 链栈实现 (不带头节点)
 
 // 初始化栈
 Status InitStack(Stack *S)
@@ -142,5 +142,112 @@ void PrintStack(Stack S)
 }
 
 // 3. 共享栈实现
+// 初始化
+Status InitShareStack(ShareStack *S)
+{
+    if (S == NULL)
+        return ERROR;
+    S->Ttop = -1;
+    S->Dtop = SHARESIZE;
+    return OK;
+}
 
+// 判空
+Status ShareEmpty(ShareStack S)
+{
+    if (S.Ttop == -1 && S.Dtop == SHARESIZE)
+        return OK;
+    return ERROR;
+}
 
+// T 压栈
+Status ShareTPush(ShareStack *S, int e)
+{
+    
+    if (S->Ttop + 1 >= S->Dtop)
+        return ERROR;
+    S->Ttop ++;
+    S->data[S->Ttop] = e;
+    return OK;
+}
+
+// D 压栈
+Status ShareDPush(ShareStack *S, int e)
+{
+    
+    if (S->Ttop + 1 >= S->Dtop)
+        return ERROR;
+    S->Dtop --;
+    S->data[S->Dtop] = e;
+    return OK;
+}
+
+// T 出栈
+Status ShareTPop(ShareStack *S, int *e)
+{
+    if (S->Ttop == -1)
+        return ERROR;
+    *e = S->data[S->Ttop];
+    S->Ttop --;
+    return OK;
+}
+
+// D 出栈
+Status ShareDPop(ShareStack *S, int *e)
+{
+    if (S->Dtop == SHARESIZE)
+        return ERROR;
+    *e = S->data[S->Dtop];
+    S->Dtop ++;
+    return OK;
+}
+
+// 获取 T 栈顶元素
+Status ShareTGetTop(ShareStack S, int *e)
+{
+    if (S.Ttop == -1)
+        return ERROR;
+    *e = S.data[S.Ttop];
+    return OK; 
+}
+
+// 获取 D 栈顶元素
+Status ShareDGetTop(ShareStack S, int *e)
+{
+    if (S.Dtop == SHARESIZE)
+        return ERROR;
+    *e = S.data[S.Dtop];
+    return OK; 
+}
+
+// T 栈中元素个数
+int LengthT(ShareStack S)
+{
+    return S.Ttop + 1;
+}
+
+// D 栈中元素个数
+int LengthD(ShareStack S)
+{
+    return SHARESIZE - S.Dtop;
+}
+
+// 打印 T 栈中元素
+void PrintTStack(ShareStack S)
+{
+    for (int i = S.Ttop; i>=0; i--)
+    {
+        printf("%d ",S.data[i]);
+    }
+    printf("\n");
+}
+
+// 打印 D 栈中元素
+void PrintDStack(ShareStack S)
+{
+    for (int i = S.Dtop; i<=SHARESIZE-1; i++)
+    {
+        printf("%d ",S.data[i]);
+    }
+    printf("\n");
+}
