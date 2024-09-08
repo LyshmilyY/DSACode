@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -I.. -Wall
 
 # 指定目标文件
-TARGET = Stack Queue
+TARGET = Stack Queue bracket evalute
 
 # 当前目录下所有 .c 文件
 SRCS = $(wildcard *.c)
@@ -19,6 +19,10 @@ all : $(TARGET)
 Stack : Stack.o EgStack.o
 	$(CC) -o $@ $^
 Queue : Queue.o EgQueue.o
+	$(CC) -o $@ $^
+bracket : bracket.o
+	$(CC) -o $@ $^
+evalute : evalute.o
 	$(CC) -o $@ $^
 # 生成对象文件规则
 %.o : %.c
@@ -36,6 +40,21 @@ run_Stack: Stack
 run_Queue: Queue
 	@echo "队列具体例子:"
 	./Queue
+run_bracket: bracket
+	@echo "括号匹配检测:"
+	./bracket < bracket.txt
+run_evalute: evalute
+	@echo "表达式求值:"
+	./evalute < express.txt
+run: Stack Queue bracket evalute
+	@echo "栈具体例子:"
+	./Stack
+	@echo "队列具体例子:"
+	./Queue
+	@echo "括号匹配检测:"
+	./bracket < bracket.txt
+	@echo "表达式求值:"
+	./evalute < express.txt
 # 清理
 .PONY : clean
 clean :

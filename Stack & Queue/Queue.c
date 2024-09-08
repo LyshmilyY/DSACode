@@ -27,7 +27,7 @@ Status EnSqQueue(SqQueue *Q, int e)
 {
     if ((Q->rear+1)%MAXSIZE == Q->font)
     {
-        printf("队列已满,入队错误!\n");
+        printf("循环队列已满, 入队失败!\n");
         return ERROR;
     }
     Q->data[Q->rear] = e;
@@ -40,7 +40,7 @@ Status EnSqQueue(SqQueue *Q, int e)
 Status DeSqQueue(SqQueue *Q, int* e)
 {
     if (EmptySqQueue(Q)){
-        printf("队列没有元素,出队错误!\n");
+        printf("循环队列已空, 出队失败!\n");
         return ERROR;
     }
     *e = Q->data[Q->font];
@@ -54,7 +54,7 @@ Status SqGetHead(SqQueue *Q, int* e)
 {
     if (EmptySqQueue(Q))
     {
-        printf("队列为空,无队头元素!\n");
+        printf("循环队列已空, 获取队头元素失败!\n");
         return ERROR;
     }
     *e = Q->data[Q->font];
@@ -69,16 +69,15 @@ int LengthSqQueue(SqQueue Q)
 } 
 
 // 打印队列
-Status PrintSqQueue(SqQueue Q)
+void PrintSqQueue(SqQueue Q)
 {
     if (Q.font == Q.rear)
-        return ERROR;
+        return;
     for (int i = Q.font; i!=Q.rear; i=(i+1)%MAXSIZE)
     {
         printf("%d ",Q.data[i]);
     }
     printf("\n");
-    return OK;
 }
 
 // 2. 链表实现队列 (不带头节点)
@@ -108,7 +107,10 @@ Status EnQueue(Queue *Q, int e)
 {
     LNode* p = (LNode*)malloc(sizeof(LNode));
     if (p == NULL)
-        return ERROR;
+    {
+        printf("内存不足, 分配失败!\n");
+        return OVERFLOW;
+    }
     p->data = e;
     p->next = NULL;
     if ((*Q).font == NULL)
@@ -128,7 +130,10 @@ Status EnQueue(Queue *Q, int e)
 Status DeQueue(Queue *Q,int* e)
 {
     if ((*Q).font == NULL)
+    {
+        printf("链表队列已空, 出队失败!\n");
         return ERROR;
+    }
     *e = (*Q).font->data;
     LNode *p = (*Q).font;
     if (p->next == NULL)
@@ -147,7 +152,10 @@ Status DeQueue(Queue *Q,int* e)
 Status GetHead(Queue Q, int* e)
 {
     if (Q.font == NULL)
+    {
+        printf("链表队列已空, 获取队头元素失败!\n");
         return ERROR;
+    }
     *e = Q.font->data;
     return OK;
 }

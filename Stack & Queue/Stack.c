@@ -1,6 +1,7 @@
 # include "./Stack.h"
 
 // 1. 顺序栈实现
+
 // 初始化
 Status InitSqStack(SqStack *S)
 {
@@ -23,7 +24,10 @@ Status SqPush(SqStack *S, int e)
 {
     
     if (S->top == MAXSIZE -1)
+    {
+        printf("顺序栈已满, 压栈失败!\n");
         return ERROR;
+    }
     S->top ++;
     S->data[S->top] = e;
     return OK;
@@ -33,7 +37,10 @@ Status SqPush(SqStack *S, int e)
 Status SqPop(SqStack *S, int *e)
 {
     if (S->top == -1)
+    {
+        printf("顺序栈已空, 出栈失败!\n");
         return ERROR;
+    }
     *e = S->data[S->top];
     S->top --;
     return OK;
@@ -43,7 +50,10 @@ Status SqPop(SqStack *S, int *e)
 Status SqGetTop(SqStack S, int *e)
 {
     if (S.top == -1)
+    {
+        printf("顺序栈已空, 获取栈顶元素失败!\n");
         return ERROR;
+    }
     *e = S.data[S.top];
     return OK; 
 }
@@ -63,6 +73,8 @@ void PrintSqStack(SqStack S)
     }
     printf("\n");
 }
+
+
 
 // 2. 链栈实现 (不带头节点)
 
@@ -86,7 +98,10 @@ Status Push(Stack *S, int e)
 {
     LNode *p = (LNode*)malloc(sizeof(LNode));
     if (p == NULL)
-        return ERROR;
+    {
+        printf("内存不足, 分配失败!\n");
+        return OVERFLOW;
+    }
     p->data = e;
     if ((*S) == NULL)
     {
@@ -103,7 +118,10 @@ Status Push(Stack *S, int e)
 Status Pop(Stack *S, int *e)
 {
     if ((*S) == NULL)
+    {
+        printf("链栈已空, 出栈失败!\n");
         return ERROR;
+    }
     *e = (*S)->data;
     (*S) = (*S)->next;
     return OK;
@@ -113,7 +131,10 @@ Status Pop(Stack *S, int *e)
 Status GetTop(Stack S, int * e)
 {
     if (S == NULL)
+    {
+        printf("链栈已空, 获取栈顶元素失败!\n");
         return ERROR;
+    }
     *e = S->data;
     return OK;
 }
@@ -164,8 +185,11 @@ Status ShareEmpty(ShareStack S)
 Status ShareTPush(ShareStack *S, int e)
 {
     
-    if (S->Ttop + 1 >= S->Dtop)
+    if (S->Ttop + 1 == S->Dtop)
+    {
+        printf("共享栈已满, T 压栈失败!\n");
         return ERROR;
+    }
     S->Ttop ++;
     S->data[S->Ttop] = e;
     return OK;
@@ -175,8 +199,11 @@ Status ShareTPush(ShareStack *S, int e)
 Status ShareDPush(ShareStack *S, int e)
 {
     
-    if (S->Ttop + 1 >= S->Dtop)
+    if (S->Ttop + 1 == S->Dtop)
+    {
+        printf("共享栈已满, D 压栈失败!\n");
         return ERROR;
+    }
     S->Dtop --;
     S->data[S->Dtop] = e;
     return OK;
@@ -186,7 +213,10 @@ Status ShareDPush(ShareStack *S, int e)
 Status ShareTPop(ShareStack *S, int *e)
 {
     if (S->Ttop == -1)
+    {
+        printf("T 栈已空, 出栈失败!\n");
         return ERROR;
+    }
     *e = S->data[S->Ttop];
     S->Ttop --;
     return OK;
@@ -196,7 +226,10 @@ Status ShareTPop(ShareStack *S, int *e)
 Status ShareDPop(ShareStack *S, int *e)
 {
     if (S->Dtop == SHARESIZE)
+    {
+        printf("D 栈已空, 出栈失败!\n");
         return ERROR;
+    }
     *e = S->data[S->Dtop];
     S->Dtop ++;
     return OK;
@@ -206,7 +239,10 @@ Status ShareDPop(ShareStack *S, int *e)
 Status ShareTGetTop(ShareStack S, int *e)
 {
     if (S.Ttop == -1)
+    {
+        printf("T 栈已空, 获取栈顶元素失败!\n");
         return ERROR;
+    }
     *e = S.data[S.Ttop];
     return OK; 
 }
@@ -215,7 +251,10 @@ Status ShareTGetTop(ShareStack S, int *e)
 Status ShareDGetTop(ShareStack S, int *e)
 {
     if (S.Dtop == SHARESIZE)
+    {
+        printf("D 栈已空, 获取栈顶元素失败!\n");
         return ERROR;
+    }
     *e = S.data[S.Dtop];
     return OK; 
 }

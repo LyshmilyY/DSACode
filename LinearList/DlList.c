@@ -5,7 +5,10 @@ Status InitList(DLinkList *L)
 {
     (*L) = (DNode *)malloc(sizeof(DNode));
     if ((*L) == NULL)
-        return ERROR;
+    {
+        printf("内存不足, 分配失败!\n");
+        return OVERFLOW;
+    }
     (*L)->prior = NULL;
     (*L)->next = NULL;
     return OK;
@@ -20,12 +23,12 @@ Status Empty(DLinkList L)
 }
 
 // 按值查找
-DNode * LocateElem(DLinkList L, elem e)
+DNode * LocateElem(DLinkList L, int e)
 {
     DNode *p = L->next;
     while (p != NULL)
     {
-        if (p->data.name == e.name)
+        if (p->data == e)
             return p;
         p = p->next;
     }
@@ -38,7 +41,7 @@ DNode * GetElem(DLinkList *L, int i)
 {
     DNode * p = (*L);
     int j = 0;
-    while (p->next != NULL && j<i)
+    while (p->next != NULL && j < i)
     {
         p = p->next;
         j++;
@@ -47,10 +50,15 @@ DNode * GetElem(DLinkList *L, int i)
 }
 
 // 指定元素后插入
-Status InsertNextNode(DNode *p,elem e)
+Status InsertNextNode(DNode *p, int e)
 {
     DNode *q = (DNode*)malloc(sizeof(DNode));
-    if (q == NULL || p == NULL)
+    if (q == NULL)
+    {
+        printf("内存不足, 分配失败!\n");
+        return OVERFLOW;
+    }
+    if (p == NULL)
         return ERROR;
     q->data = e;
     p->next->prior = q;
@@ -61,10 +69,15 @@ Status InsertNextNode(DNode *p,elem e)
 }
 
 //指定元素前插入
-Status InsertPreNode(DNode *p,elem e)
+Status InsertPreNode(DNode *p, int e)
 {
     DNode *q = (DNode*)malloc(sizeof(DNode));
-    if (q == NULL || p ==NULL)
+    if (q == NULL)
+    {
+        printf("内存不足, 分配失败!\n");
+        return OVERFLOW;
+    }
+    if (p == NULL)
         return ERROR;
     q->data = e;
     p->prior->next = q;
@@ -75,13 +88,19 @@ Status InsertPreNode(DNode *p,elem e)
 }
 
 // 按位置插入
-Status ListInsert(DLinkList *L, int i, elem e)
+Status ListInsert(DLinkList *L, int i, int e)
 {
     if (i < 1)
+    {
+        printf("插入位置不合法!\n");
         return ERROR;
+    }
     DNode *p = (DNode*)malloc(sizeof(DNode));
     if (p == NULL)
-        return ERROR;
+    {
+        printf("内存不足, 分配失败!\n");
+        return OVERFLOW;
+    }
     if (i == 1)
     {
         p->data = e;
@@ -96,11 +115,31 @@ Status ListInsert(DLinkList *L, int i, elem e)
 
 } 
 
+// 删除指定节点
+Status DeleteNode(DNode *p)
+{
+    if (p == NULL)
+        return ERROR;
+    DNode *q = p->next;
+    DNode *s = p->prior;
+    if (q == NULL && s == NULL)
+        return ERROR;
+    if (q == NULL)
+        s->next =NULL;
+    s->next = q;
+    q->prior =s;
+    free(p);
+    return OK;
+}
+
 // 删除
-Status ListDelete(DLinkList *L, int i, elem * e)
+Status ListDelete(DLinkList *L, int i, int* e)
 {
     if (i < 1)
+    {
+        printf("删除位置不合法!\n");
         return ERROR;
+    }
     DNode *p = (*L)->next;
     if (i == 1)
     {
@@ -120,23 +159,6 @@ Status ListDelete(DLinkList *L, int i, elem * e)
     return DeleteNode(p);
 }
 
-// 删除指定节点
-Status DeleteNode(DNode *p)
-{
-    if (p == NULL)
-        return ERROR;
-    DNode *q = p->next;
-    DNode *s = p->prior;
-    if (q == NULL && s == NULL)
-        return ERROR;
-    if (q == NULL)
-        s->next =NULL;
-    s->next = q;
-    q->prior =s;
-    free(p);
-    return OK;
-}
-
 // 表长
 int Length(DLinkList L)
 {
@@ -152,11 +174,10 @@ int Length(DLinkList L)
 // 打印链表
 void PrintList(DLinkList L)
 {
-    printf("%5s %15s %15s %15s %20s\n","Name", "Score:Math", "Score:English", "Score:Politics", "Score:Computer");
     DNode *p = L->next;
     while(p != NULL)
     {
-        printf("%5s %10d %15d %15d %20d\n",p->data.name,p->data.Math,p->data.English,p->data.Politics,p->data.Computer);
+        PrintNode(*p);
         p = p->next;
     }
     printf("\n");
@@ -165,9 +186,7 @@ void PrintList(DLinkList L)
 // 打印节点
 void PrintNode(DNode p)
 {
-    printf("%5s %15s %15s %15s %20s\n","Name", "Score:Math", "Score:English", "Score:Politics", "Score:Computer");
-    printf("%5s %10d %15d %15d %20d\n",p.data.name,p.data.Math,p.data.English,p.data.Politics,p.data.Computer);
-    printf("\n");
+    printf("%d ", p.data);
 }
 
 // 尾插法
@@ -176,11 +195,14 @@ DLinkList TailInsert(DLinkList *L,int n)
     DNode *r = *L;
     for (int i = 0; i < n; i++)
     {
-        elem e;
-        scanf("%s %d %d %d %d\n",e.name,&(e.Math),&(e.English),&(e.Politics),&(e.Computer));
+        int e;
+        scanf("%d ", &e);
         DNode *p = (DNode*)malloc(sizeof(DNode));
         if (p == NULL)
+        {
+            printf("内存不足, 分配失败!\n");
             return NULL;
+        }
         p->data = e;
         p->next = r->next;
         r->next = p;
@@ -195,11 +217,14 @@ DLinkList HeadInsert(DLinkList *L,int n)
 {
     for (int i = 0; i < n; i++)
     {
-        elem e;
-        scanf("%s %d %d %d %d\n",e.name,&(e.Math),&(e.English),&(e.Politics),&(e.Computer));
+        int e;
+        scanf("%d ", &e);
         DNode *p = (DNode*)malloc(sizeof(DNode));
         if (p == NULL)
+        {
+            printf("内存不足, 分配失败!\n");
             return NULL;
+        }
         p->data = e;
         p->next = (*L)->next;
         (*L)->next = p;

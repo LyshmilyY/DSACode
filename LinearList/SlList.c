@@ -3,9 +3,12 @@
 // 初始化
 Status InitList(LinkList *L)
 {
-    *L = (LNode *) malloc (sizeof(LNode));
+    *L = (LNode *)malloc(sizeof(LNode));
     if (*L == NULL)
-        return ERROR;
+    {
+        printf("内存不足, 分配失败!\n");
+        return OVERFLOW;
+    }
     (*L) ->next = NULL;
     return OK;
 }
@@ -19,10 +22,10 @@ Status Empty(LinkList L)
 }
 
 // 按值查找
-LNode * LocateElem(LinkList L, elem e)
+LNode * LocateElem(LinkList L, int e)
 {
     LNode *p = L->next;
-    while(p != NULL && p->data.name != e.name)
+    while(p != NULL && p->data != e)
         p = p->next;
     return p;
 }
@@ -31,11 +34,12 @@ LNode * LocateElem(LinkList L, elem e)
 LNode * GetElem(LinkList *L, int i)
 {
     if (i < 1)
+    {    
+        printf("查找位置不合法!\n");
         return NULL;
+    }
     LNode *p = *L;
-    // 第 j 个节点 p
     int j = 0;
-    // 找到第 i 个元素的位置
     while (p !=NULL && j < i)
     {
         p = p->next;
@@ -45,10 +49,15 @@ LNode * GetElem(LinkList *L, int i)
 }
 
 //指定元素后插入
-Status InsertNextNode(LNode *p,elem e)
+Status InsertNextNode(LNode *p, int e)
 {
     LNode *s = (LNode *)malloc(sizeof(LNode));
-    if (s == NULL || p == NULL)
+    if (s == NULL)
+    {
+        printf("内存不足, 分配失败!\n");
+        return OVERFLOW;
+    }
+    if (p == NULL)
         return ERROR;
     s->data = e;
     s->next = p->next;
@@ -57,10 +66,15 @@ Status InsertNextNode(LNode *p,elem e)
 }
 
 //指定元素前插入
-Status InsertPreNode(LNode *p,elem e)
+Status InsertPreNode(LNode *p, int e)
 {
     LNode *s = (LNode *)malloc(sizeof(LNode));
-    if (s == NULL || p == NULL)
+    if (s == NULL)
+    {
+        printf("内存不足, 分配失败!\n");
+        return OVERFLOW;
+    }
+    if (p == NULL)
         return ERROR;
     s->next = p->next;
     p->next = s;
@@ -70,21 +84,27 @@ Status InsertPreNode(LNode *p,elem e)
 }
 
 // 按位置插入
-Status ListInsert(LinkList *L, int i, elem e)
+Status ListInsert(LinkList *L, int i, int e)
 {
     if (i < 1)
+    {
+        printf("插入位置不合法!\n");
         return ERROR;
+    }
     LNode *p = (LNode *)malloc(sizeof(LNode));
     if (p == NULL)
-        return ERROR;
+    {
+        printf("内存不足, 分配失败!\n");
+        return OVERFLOW;
+    }
     if (i ==1)
-        {
-            
-            p->data = e;
-            p->next = (*L)->next;
-            (*L)->next = p;
-            return OK;
-        }
+    {
+        
+        p->data = e;
+        p->next = (*L)->next;
+        (*L)->next = p;
+        return OK;
+    }
     p = GetElem(L,i-1);
     if (p == NULL)
         return ERROR;
@@ -92,12 +112,14 @@ Status ListInsert(LinkList *L, int i, elem e)
 }
 
 
-
 // 删除
-Status ListDelete(LinkList *L, int i, elem * e)
+Status ListDelete(LinkList *L, int i, int* e)
 {
     if (i < 1)
+    {
+        printf("删除位置不合法!\n");
         return ERROR;
+    }
     if (i == 1)
     {
         if ((*L)->next == NULL)
@@ -112,7 +134,6 @@ Status ListDelete(LinkList *L, int i, elem * e)
     LNode * q = p->next;
     *e = q->data;
     p->next =q->next;
-    //释放删除节点空间
     free(q);
     return OK;
 }
@@ -146,14 +167,14 @@ int Length(LinkList L)
     }
     return len;
 }
+
 // 打印
 void PrintList(LinkList L)
 {
-    printf("%5s %15s %15s %15s %20s\n","Name", "Score:Math", "Score:English", "Score:Politics", "Score:Computer");
     LNode *p = L->next;
     while(p != NULL)
     {
-        printf("%5s %10d %15d %15d %20d\n",p->data.name,p->data.Math,p->data.English,p->data.Politics,p->data.Computer);
+        PrintNode(*p);
         p = p->next;
     }
     printf("\n");
@@ -162,19 +183,24 @@ void PrintList(LinkList L)
 // 打印单个数据元素
 void PrintNode(LNode p)
 {
-    printf("%5s %15s %15s %15s %20s\n","Name", "Score:Math", "Score:English", "Score:Politics", "Score:Computer");
-    printf("%5s %10d %15d %15d %20d\n",p.data.name,p.data.Math,p.data.English,p.data.Politics,p.data.Computer);
-    printf("\n");
+    printf("%d ", p.data);
 }
 
 // 尾插法实现单链表
 LinkList TailInsert(LinkList *L,int n)
 {
+    int e;
     LNode *r = *L;
     for (int i = 0; i < n; i++)
     {
-        LNode *p = (LNode*)malloc(sizeof(LNode));
-        scanf("%s %d %d %d %d\n",p->data.name,&(p->data.Math),&(p->data.English),&(p->data.Politics),&(p->data.Computer));
+        scanf("%d ", &e);
+        LNode* p = (LNode*)malloc(sizeof(LNode));
+        if (p == NULL)
+        {
+            printf("内存不足, 分配失败!\n");
+            return NULL;
+        }
+        p->data = e;
         p->next = r->next;
         r->next = p;
         r = p;
@@ -184,13 +210,19 @@ LinkList TailInsert(LinkList *L,int n)
 }
 
 // 头插法实现单链表
-
 LinkList HeadInsert(LinkList *L,int n)
 {
+    int e;
     for (int i = 0; i < n; i++)
     {
+        scanf("%d ", &e);
         LNode *p = (LNode*)malloc(sizeof(LNode));
-        scanf("%s %d %d %d %d\n",p->data.name,&(p->data.Math),&(p->data.English),&(p->data.Politics),&(p->data.Computer));
+        if (p == NULL)
+        {
+            printf("内存不足, 分配失败!\n");
+            return NULL;
+        }
+        p->data = e;
         p->next = (*L)->next;
         (*L)->next = p;
     }
@@ -198,7 +230,6 @@ LinkList HeadInsert(LinkList *L,int n)
 }
 
 // 反转单链表
-
 void ListReverse(LinkList *L)
 {
     LNode *p,*q;

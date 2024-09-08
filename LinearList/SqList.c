@@ -3,8 +3,12 @@
 // 初始化
 Status InitList(SqList * L)
 {
-    L->data = malloc(INITSIZE * sizeof(elem));
-    if (!L->data) exit(OVERFLOW);
+    L->data = malloc(INITSIZE * sizeof(int));
+    if (!L->data)
+    {
+        printf("内存不足, 分配失败!\n");
+        return OVERFLOW;
+    }
     L->length = 0;
     return OK;
 }
@@ -12,9 +16,13 @@ Status InitList(SqList * L)
 // 增加表长
 Status IncreaseSize(SqList * L, int len)
 {
-    elem *p = L->data;
-    L->data = (elem *)malloc((L->MaxSize + len) * sizeof(elem));
-    if (!L->data) exit(OVERFLOW);
+    int* p = L->data;
+    L->data = (int*)malloc((L->MaxSize + len) * sizeof(int));
+    if (!L->data)
+    {
+        printf("内存不足, 分配失败!\n");
+        return OVERFLOW;
+    }
     for (int i = 0; i < L->length; i++)
     {
         L->data[i] = p[i];
@@ -25,9 +33,13 @@ Status IncreaseSize(SqList * L, int len)
 }
 
 // 插入
-Status ListInsert(SqList * L, int i, elem e)
+Status ListInsert(SqList * L, int i, int e)
 {
-    if (i < 1 || i > L->length + 1) return ERROR;
+    if (i < 1 || i > L->length + 1)
+    {
+        printf("插入位置不合法!\n");
+        return ERROR;
+    }
     if (L->length >= L->MaxSize) IncreaseSize(L, INITSIZE);
     for (int j = L->length - 1; j >= i-1; j--)
     {
@@ -39,9 +51,13 @@ Status ListInsert(SqList * L, int i, elem e)
 }
 
 // 删除
-Status ListDelete(SqList * L, int i, elem * e)
+Status ListDelete(SqList * L, int i, int* e)
 {
-    if (i < 1 || i > L->length) return ERROR;
+    if (i < 1 || i > L->length)
+    {
+        printf("删除位置不合法!\n");
+        return ERROR;
+    }
     *e = L->data[i - 1];
     for (int j = i; j < L->length; j++)
     {
@@ -52,20 +68,25 @@ Status ListDelete(SqList * L, int i, elem * e)
 }
 
 // 按值查找
-int LocateElem(SqList L, elem e)
+int LocateElem(SqList L, int e)
 {
     for (int i = 0; i < L.length; i++)
     {
-        if (L.data[i].name == e.name) 
+        if (L.data[i]== e) 
             return i + 1;
     }
+    printf("查找元素不存在!\n");
     return ERROR;
 }
 
 // 按位查找
-Status GetElem(SqList L, int i, elem * e)
+Status GetElem(SqList L, int i, int* e)
 {
-    if (i < 1 || i > L.length) return ERROR;
+    if (i < 1 || i > L.length)
+    {
+        printf("查找位置不合法!\n");
+        return ERROR;
+    }
     *e = L.data[i - 1];
     return OK;
 }
@@ -79,24 +100,23 @@ int Length(SqList L)
 // 判空
 Status Empty(SqList L)
 {
-    if (L.length == 0) return OK;
-    else return ERROR;
+    if (L.length == 0) 
+        return OK;
+    else 
+        return ERROR;
 }
 
 // 打印
 void PrintList(SqList L)
 {
-    printf("%5s %15s %15s %15s %20s\n","Name", "Score:Math", "Score:English", "Score:Politics", "Score:Computer");
     for (int i = 0; i < L.length; i++)
     {
-        printf("%5s %10d %15d %15d %20d\n",L.data[i].name,L.data[i].Math,L.data[i].English,L.data[i].Politics,L.data[i].Computer);
+        Printelem(L.data[i]);
     }
     printf("\n");
 } 
 
-void Printelem(elem e)
+void Printelem(int e)
 {
-    printf("%5s %15s %15s %15s %20s\n","Name", "Score:Math", "Score:English", "Score:Politics", "Score:Computer");
-printf("%5s %10d %15d %15d %20d\n",e.name,e.Math,e.English,e.Politics,e.Computer);
-printf("\n");
+    printf("%d ",e);
 }
