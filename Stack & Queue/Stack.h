@@ -3,25 +3,26 @@
 # define SHARESIZE 20
 
 // 顺序栈定义
-typedef struct SqStack{
+struct SqStack{
     int data[MAXSIZE];
     int top;
-}SqStack;
-
+};
+typedef struct SqStack SqStack;
 // 链栈定义
-typedef struct LNode{
+struct LNode{
     int data;
     struct LNode* next;
-}LNode;
-typedef LNode* Stack;
+};
+typedef struct LNode LNode;
+typedef struct LNode *Stack;
 
 // 共享栈定义
-typedef struct ShareStack{
+struct ShareStack{
     int data[SHARESIZE];
     int Ttop;
     int Dtop;
-}ShareStack;
-
+};
+typedef struct ShareStack ShareStack;
 // 顺序栈函数声明
 Status InitSqStack(SqStack *S); // 初始化栈
 Status SqEmpty(SqStack S); // 判空

@@ -5,8 +5,7 @@ typedef struct LNode{
     int data;
     struct LNode *next;
 }LNode;
-
-typedef LNode* LinkList;
+typedef LNode *LinkList;
 
 // 函数声明 
 Status InitList(LinkList *L); // 初始化

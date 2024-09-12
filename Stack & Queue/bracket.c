@@ -2,11 +2,11 @@
 # include <stdbool.h>
 # include <stdlib.h>
 # define MAXSIZE 20
-typedef struct Stack{
+struct Stack{
     char data[MAXSIZE];
     int top;
-}Stack;
-
+};
+typedef struct Stack Stack;
 bool InitStack(Stack* S);
 bool Push(Stack* S, char ch);
 bool Pop(Stack* S, char* ch);

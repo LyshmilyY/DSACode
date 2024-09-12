@@ -2,20 +2,22 @@
 # define MAXSIZE 10
 
 // 循环队列定义
-typedef struct SqQueue{
+struct SqQueue{
     int data[MAXSIZE];
     int font,rear;
-}SqQueue;
-
+};
+typedef struct SqQueue SqQueue;
 // 链表队列定义
-typedef struct LNode{
+struct LNode{
     int data;
     struct LNode *next;
-}LNode;
-typedef struct Queue{
+};
+typedef struct LNode LNode;
+struct Queue{
     int size;
     LNode *font, *rear;
-}Queue;
+};
+typedef struct Queue Queue;
 
 
 // 循环队列函数声明

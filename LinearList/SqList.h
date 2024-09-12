@@ -1,12 +1,11 @@
 #include "../common.h"
 #define INITSIZE 10
 // 定义顺序表
-typedef struct{
+typedef struct SqList{
     int length;
     int MaxSize;
     int* data;
 }SqList;
-
 // 函数声明 
 
 Status InitList(SqList * L); // 初始化

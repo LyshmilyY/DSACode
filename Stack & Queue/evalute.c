@@ -4,10 +4,11 @@
 
 # define MAXSIZE 20
 
-typedef struct Stack{
+struct Stack{
     int data[MAXSIZE];
     int top;
-}Stack;
+};
+typedef struct Stack Stack;
 
 char opset[7] = {'+', '-', '*', '/', '(', ')', '#'};
 

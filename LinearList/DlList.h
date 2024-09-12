@@ -5,9 +5,8 @@ typedef struct DNode{
     int data;
     struct DNode *prior;
     struct DNode *next;
-}DNode;
-
-typedef DNode* DLinkList;
+}DNode; 
+typedef DNode *DLinkList;
 
 // 函数声明 
 Status InitList(DLinkList *L); // 初始化
